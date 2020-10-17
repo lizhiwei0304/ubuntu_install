@@ -325,13 +325,15 @@ tips：楼主在实践中，发现华为的蓝牙鼠标居然有三个MAC地址�
 
 然后打开设置，设置开启的快捷键
 
-![](/home/lizhiwei/Documents/ubuntu配置/0_装机软件/20150711180746764.png)
+![](./sources/20150711180746764.png)
 
 添加成功的状态
 
-![](/home/lizhiwei/Documents/ubuntu配置/0_装机软件/20150711181142303.png)
+![](./sources/20150711181142303.png)
 
 单击右侧的禁用，然后快速按下Ctrl+Alt+A，如下图。然后利用Ctrl + Alt + A,测试OK.
+
+![](./sources/20150711182250068.png)
 
 # ps:
 
