@@ -75,7 +75,7 @@
 ​		然后执行安装：
 
 ```
-	sudo sh ./NVIDIA-Linux-x86_64-390.48.run --no-opengl-files –no-x-check –no-nouveau-check
+	sudo ./NVIDIA-Linux-x86_64-390.48.run --no-opengl-files –no-x-check –no-nouveau-check
 ```
 
 （9）常见问题解决
