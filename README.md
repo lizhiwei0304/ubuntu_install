@@ -75,7 +75,7 @@
 ​		然后执行安装：
 
 ```
-	sudo ./NVIDIA-Linux-x86_64-390.48.run --no-opengl-files –no-x-check –no-nouveau-check
+	sudo ./NVIDIA-Linux-x86_64-390.48.run -no-opengl-files –no-x-check –no-nouveau-check
 ```
 
 （9）常见问题解决
@@ -89,7 +89,7 @@
    如果上面的都已经做了，但还是有问题，可以尝试下面的配置：
 
    ```shell
-   sudo nano /usr/share/X11/xorg.conf.d/10-amdgpu.conf
+   sudo gedit /usr/share/X11/xorg.conf.d/10-amdgpu.conf
    ```
 
    > 有可能不是这个文件，但是类似。
@@ -108,7 +108,7 @@
    下面修改nvidia的配置
 
    ```shell
-   sudo nano /usr/share/X11/xorg.conf.d/10-nvidia.conf
+   sudo gedit /usr/share/X11/xorg.conf.d/10-nvidia.conf
    ```
 
    修改为下面这样：
@@ -293,6 +293,10 @@ tips：楼主在实践中，发现华为的蓝牙鼠标居然有三个MAC地址�
 17.时间同步
 
 ```
+	sudo apt-get install ntpdate
+	sudo ntpdate time.windows.com
+	sudo hwclock --localtime --systohc
+	
 	sudo timedatectl set-local-rtc 1
 ```
 
@@ -325,15 +329,13 @@ tips：楼主在实践中，发现华为的蓝牙鼠标居然有三个MAC地址�
 
 然后打开设置，设置开启的快捷键
 
-![](./sources/20150711180746764.png)
+![](/home/lizhiwei/Documents/ubuntu配置/0_装机软件/20150711180746764.png)
 
 添加成功的状态
 
-![](./sources/20150711181142303.png)
+![](/home/lizhiwei/Documents/ubuntu配置/0_装机软件/20150711181142303.png)
 
 单击右侧的禁用，然后快速按下Ctrl+Alt+A，如下图。然后利用Ctrl + Alt + A,测试OK.
-
-![](./sources/20150711182250068.png)
 
 # ps:
 
@@ -349,3 +351,132 @@ tips：楼主在实践中，发现华为的蓝牙鼠标居然有三个MAC地址�
 	sudo apt-get install kazam
 ```
 
+22.vscode安装与ROS插件相关
+
+###### 从官网下载并安装
+
+https://code.visualstudio.com/
+
+1. 中文模式。在vs code左侧选择Extenxions，输入chinese，安装简体中文包。
+2. ros插件上。我选择了MS的预览版。
+   网上人多选了ajshort的版本，但是这个版本已经deprecated. 并且被MS版兼并，虽然MS版还不是很完善。
+3. c++配置。在Extenxions里面，输入c++，安装c/c++ 及 C++ Intellisense 这两个。
+4. 配置CMakeLists.txt文件语法高亮。在Extenxions里面，输入txt，安装Txt Syntax。
+5. 配置msg, srv, action语法高亮。在Extenxions里面，输入msg，安装Msg Language Support。
+
+参考链接：https://blog.csdn.net/MSNH2012/article/details/100512253
+
+###### 创建工作空间及功能包
+
+1. 如果已经有工作空间，可以通过`打开文件夹`选项进行打开。
+2. 如果要新建工作空间，可以先`创建文件夹`输入文件夹名称，例如:test，点击确定。
+3. 然后再创建文件夹`src`.
+4. 点击"终端"–>“新建终端”,在终端中输入"catkin_make"，系统会自动在test文件夹下创建 “build”, "devel"文件夹和其他配置文件。
+
+在`新建工作空间`时，会在test目录下自动生成一个`.vscode`文件夹，其内自动有2个`.json`文件。`c_cpp_properties.json`和`setting.json`
+如果没有生成，重启vscode试试。
+或者通过按Ctrl + Shift + P,输入c/c++: edit configurations(JSON), 手动生成.
+
+另外，记得把新建的工作空间source一下。
+查看工作空间情况
+
+```bash
+$ echo $ROS_PACKAGE_PATH
+```
+
+###### 功能包
+
+`右键`点击"src"文件夹，右键弹出选项中，点击"Create Catkin Package"，输入包的名称ros_test，按Enter确认，输入包的依赖“std_msgs roscpp”，空格隔开，按Enter确认。系统自动创建CMakeLists.txt及package.xml文件。
+也可通过按`Ctrl + Shift + P`,输入`ros:Create Catkin Package`配置功能包。
+
+注：没有在创建工作空间时的两个.json文件，是无法生成功能包的。可能会没反应或报错如下：
+
+> 命令"ROS: Create Catkin Package"导致错误 (command ‘ros.createCatkinPackage’……
+
+###### 运行节点
+
+1. 启动roscore：通过按`Ctrl + Shift + P`,输入`ros:start core`启动roscore。
+2. 运行节点：通过按`Ctrl + Shift + P`,输入`ros:run a rose executable`，依次输入对应的package及节点，参数。或者直接下终端`rosrun ………………`
+
+###### 断点调试配置
+
+在未配置过调试前，没有`launch.json`文件。通过`Ctrl + Shift + D`，下拉添加配置，自动生成该文件。断点调试有如下几种方式，这里主要讲`c/c++ gdb启动`：
+
+###### c/c++ gdb启动
+
+先说一下，使用这种调试方法，不需要先运行节点。
+该方式会生成`launch.json`:
+
+```json
+        {
+            "name": "(gdb) 启动", //修改此处
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "输入程序名称，例如 ${workspaceFolder}/a.out", //修改此处
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+```
+
+- [ ] 需要修改其中`program`为需要调试的可执行程序。更改为编译后的可执行文件的路径下的文件（需要二进制文件），对应ROS通过catkin_make生产可执行文件的路径通常在`/devel/lib/`下，后面跟上你设置好的package名和可执行文件名例如：
+
+```json
+"program": "${workspaceFolder}/devel/lib/ros_test/talker"
+```
+
+- [ ] 需要注意，有些教程用了`${workspaceRoot}/devel/lib/ros_test/talker`， 自己看哪个可行。
+
+
+- [ ] *另外，这里的`"request": "launch"`，系统也提示我可以用`"request": "attach"`模式，但是我变成attach后，系统又提示我无法识别了。。*
+
+然后:
+
+1. 启动roscore：通过按`Ctrl + Shift + P`,输入`ros:start core`启动roscore。
+2. 设置断点，运行调试
+3. 如果系统像没有断点一样运行，需要配置一下。在`CMakeLists.txt`中，`project`后添加参数`SET(CMAKE_BUILD_TYPE Debug)`,然后重新catkin_make:
+
+```cmake
+cmake_minimum_required(VERSION 2.8.3)
+project()
+```
+
+`SET(CMAKE_BUILD_TYPE Debug)`
+
+或者是catkin_make在编译功能包时，添加catkin_make的参数
+
+```bash
+$ catkin_make -DCMAKE_BUILD_TYPE=Debug
+```
+
+如果工作空间下由多个功能包，可以在编译时添加`-DCATKIN_WHITELIST_PACKAGES`编译指定功能包
+
+```bash
+$ catkin_make -DCMAKE_BUILD_TYPE=Debug -DCATKIN_WHITELIST_PACKAGES="package1;package2"
+```
+
+另外，如果开始断点调试时，出现报错：
+
+> poll failed with error Interrupted system call
+
+解决方法是:
+打开~/.gdbinit（如果没有这个文件则自己新建一个同名文档），然后添加一下三行即可。
+
+```
+set target-async 1
+set pagination off
+set non-stop on
+```
+
+该报错参考链接：
+https://blog.csdn.net/ABC_ORANGE/article/details/102665792
