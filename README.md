@@ -33,7 +33,7 @@
 （2）在最后一行添加：
 
 ```
-	blacklist nouveau
+	blacklist 
 ```
 
 ​	这一条的含义是禁用**nouveau**第三方驱动，之后也不需要改回来。由于nouveau是构建在内核中的，所以要执行下面命令生效:
