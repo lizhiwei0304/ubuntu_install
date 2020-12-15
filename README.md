@@ -126,7 +126,15 @@
 	sudo ./NVIDIA-Linux-x86_64-390.48.run -no-opengl-files –no-x-check –no-nouveau-check
 ```
 
-5）常见问题解决
+5）重新安装ubuntu系统桌面
+
+```
+	sudo apt-get install --reinstall ubuntu-desktop
+```
+
+​	  安装完成后重新启动。
+
+6)常见问题解决
 
 1. 安装完驱动后，HDMI扩展屏幕不能使用，现象表现为能识别扩展屏幕但是黑屏。
    这种情况需要确定以下内容是否已经设置：
