@@ -311,9 +311,34 @@
 
 16.修改蓝牙设备的key，实现蓝牙设备在双系统的应用。
 
-tips：楼主在实践中，发现华为的蓝牙鼠标居然有三个MAC地址，所以请大家注意在操作的过程中注意电脑MAC地址和蓝牙设备MAC地址的匹配，从而才能实现蓝牙设备的双系统实现。
+tips：楼主在实践中，发现华为的蓝牙鼠标竟然会生成不同的MAC地址，所以请大家注意在操作的过程中注意电脑MAC地址和蓝牙设备MAC地址的匹配，从而才能实现蓝牙设备的双系统实现。
 
-具体操作轻参考链接：https://blog.csdn.net/10km/article/details/61201268
+1）在win10 下建立与鼠标的蓝牙配对
+
+2）到微软官网下载PSTools
+
+```
+	https://technet.microsoft.com/en-us/sysinternals/bb897553
+```
+
+将压缩包解压缩后，以管理员身份运行cmd,在PSTools解压缩目录下执行打开注册表(不需要像参考文章里说的要压到Windows\System32目录下)
+
+```
+	.\PsExec.exe -s -i regedit
+```
+
+找到`HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\BTHPORT\Parameters\Keys\`
+如下图，记录以下四个值IRK、LTK、ERand、EDIV
+
+3）切换到ubuntu系统下，不需要将蓝牙鼠标与ubuntu系统连接好
+
+打开终端，进入root下，如下图
+
+![](/home/lizhiwei/Documents/ubuntu配置/ubuntu_install/sources/20170310173136513.png)
+
+进入电脑的mac地址之后，创建以蓝牙mac为主的文件夹，创建好蓝牙文件夹后，进入并创建attributes和info两个文件
+
+4）修改info的关键变量为win10的值，IRK对应[IdentityResolvingKey];LTK对应[LongTermKey];EDIV对应EDiv；ERand对应Rand，填好后保存重启电脑，蓝牙鼠标就可以使用了。
 
 17.修改ubuntu启动项：
 
